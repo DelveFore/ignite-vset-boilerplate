@@ -1,0 +1,54 @@
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import {
+  Content,
+  Text,
+  Button,
+  Footer,
+  FooterTab
+} from 'native-base'
+import GradientContainer from '../../components/GradientContainer'
+import Header from '../../components/<%= props.headerName %>'
+
+// Add Actions - replace 'Your' with whatever your reducer is called :)
+// import YourActions from '../Redux/YourRedux'
+
+class <%= props.name %> extends Component {
+  static propTypes = {
+    navigation: PropTypes.object
+  }
+  render () {
+    const { navigation } = this.props
+    return (
+      <GradientContainer>
+        <Header hasGradient navigation={navigation} />
+        <Content>
+
+        </Content>
+        <Footer>
+          <FooterTab>
+            <Button transparent textStyle={{ color: '#87838B' }}>
+              <Text>Secondary</Text>
+            </Button>
+          </FooterTab>
+          <FooterTab>
+            <Button primary large>
+              <Text style={{ color: '#fff' }}>Primary</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      </GradientContainer>
+    )
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {}
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(<%= props.name %>)

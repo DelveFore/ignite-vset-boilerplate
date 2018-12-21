@@ -1,0 +1,27 @@
+{
+  "name": "ignite-vset-boilerplate",
+  "description": "An Ignite Plugin and Boilerplate for VoFix Native App",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": {
+    "name": "DelveFore",
+    "email": "social@delvefore.com",
+    "url": "https://github.com/DelveFore/ignite-vset-boilerplate"
+  },
+  "scripts": {
+    "lint": "standard",
+    "watch": "ava --watch",
+    "shipit": "np"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "url": "https://github.com/DelveFore/ignite-vset-boilerplate",
+  "repository": "delvefore/ignite-vset-boilerplate",
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "np": "^2.12.0",
+    "sinon": "^1.17.7",
+    "standard": "^8.6.0"
+  }
+}
