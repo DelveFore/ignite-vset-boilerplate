@@ -1,10 +1,5 @@
-# My Plugin
+# Ignite Plugin
 
-This is where you would put an intro to your plugin, and maybe a few examples of usage. 
+The goal of this plugin is to accelerate development of VoFix and continue to pull reusable components into project `ignite-shadow-boilerplate` (temporary name).
 
-## Example
-
-```js
-console.log("Hello World")
-```
-
+Commands are the only feature available at this time.
