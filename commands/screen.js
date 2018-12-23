@@ -14,12 +14,23 @@ module.exports = async function (context) {
 
   const HEADER_TYPES = {
     Primary: 'Primary',
-    Secondary: 'Secondary'
+    Secondary: 'Secondary',
+    Third: 'Third'
   }
 
   const headerSelection = await context.prompt.ask(
-    { name: 'type', type: 'list', message: 'Screen Level', choices: [HEADER_TYPES.Secondary, HEADER_TYPES.Primary] }
+    {
+      name: 'type',
+      type: 'list',
+      message: 'Screen Level',
+      choices: [
+        HEADER_TYPES.Secondary,
+        HEADER_TYPES.Primary,
+        HEADER_TYPES.Third
+      ]
+    }
   )
+
   const headerType = headerSelection.type
   const headerName = headerType === HEADER_TYPES.Primary ? 'MenuHeader' : 'DeeperHeader'
 
@@ -27,12 +38,19 @@ module.exports = async function (context) {
   const screenName = name
   const props = { name: screenName, headerName }
 
-  const jobs = [
-    {
+  const jobs = []
+  if (headerSelection.type === HEADER_TYPES.Third) {
+    const { parent } = await context.prompt.ask({ name: 'parent', type: 'input', message: 'Parent Screen Name?' })
+    jobs.push({
+      template: `screen.ejs`,
+      target: `src/screens/${parent}/${screenName}.js`
+    })
+  } else {
+    jobs.push({
       template: `screen.ejs`,
       target: `src/screens/${screenName}/index.js`
-    }
-  ]
+    })
+  }
 
   // make the templates
   await ignite.copyBatch(context, jobs, props)
