@@ -39,12 +39,14 @@ module.exports = async function (context) {
   const props = { name: screenName, headerName }
 
   const jobs = []
+  let parentScreen = null
   if (headerSelection.type === HEADER_TYPES.Third) {
-    const { parent } = await context.prompt.ask({ name: 'parent', type: 'input', message: 'Parent Screen Name?' })
+    let { parent } = await context.prompt.ask({ name: 'parent', type: 'input', message: 'Parent Screen Name?' })
     jobs.push({
       template: `screen.ejs`,
       target: `src/screens/${parent}/${screenName}.js`
     })
+    parentScreen = parent
   } else {
     jobs.push({
       template: `screen.ejs`,
@@ -60,7 +62,8 @@ module.exports = async function (context) {
   if (config.navigation === 'react-navigation') {
     const navigationFile = headerType === HEADER_TYPES.Primary ? 'DrawerNavigation' : 'AppNavigation'
     const appNavFilePath = `${process.cwd()}/src/Navigation/${navigationFile}.js`
-    const importToAdd = `import ${screenName} from '../screens/${screenName}'`
+    const importFrom = parentScreen ? `'../screens/${parentScreen}/${screenName}'` : `'../screens/${screenName}'`
+    const importToAdd = `import ${screenName} from ${importFrom}`
     const routeToAdd = `    ${screenName}: { screen: ${screenName} },`
 
     if (!filesystem.exists(appNavFilePath)) {
