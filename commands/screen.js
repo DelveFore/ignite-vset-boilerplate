@@ -1,6 +1,4 @@
 // @cliDescription  Generates an opinionated container.
-const patterns = require('../lib/patterns')
-
 module.exports = async function (context) {
   // grab some features
   const { parameters, print, strings, ignite, filesystem } = context
@@ -14,13 +12,19 @@ module.exports = async function (context) {
     return
   }
 
-  const headerType = await context.prompt.ask(
-    { name: 'type', type: 'list', message: 'Screen Level', choices: ['Secondary', 'Primary'] }
+  const HEADER_TYPES = {
+    Primary: 'Primary',
+    Secondary: 'Secondary'
+  }
+
+  const headerSelection = await context.prompt.ask(
+    { name: 'type', type: 'list', message: 'Screen Level', choices: [HEADER_TYPES.Secondary, HEADER_TYPES.Primary] }
   )
-  const headerName = headerType === 'Primary' ? 'MenuHeader' : 'DeeperHeader'
+  const headerType = headerSelection.type
+  const headerName = headerType === HEADER_TYPES.Primary ? 'MenuHeader' : 'DeeperHeader'
 
   const name = pascalCase(parameters.first)
-  const screenName = name.endsWith('Screen') ? name : `${name}`
+  const screenName = name
   const props = { name: screenName, headerName }
 
   const jobs = [
@@ -36,7 +40,7 @@ module.exports = async function (context) {
   // if using `react-navigation` go the extra step
   // and insert the screen into the nav router
   if (config.navigation === 'react-navigation') {
-    const navigationFile = headerType === 'Primary' ? 'DrawerNavigation' : 'AppNavigation'
+    const navigationFile = headerType === HEADER_TYPES.Primary ? 'DrawerNavigation' : 'AppNavigation'
     const appNavFilePath = `${process.cwd()}/src/Navigation/${navigationFile}.js`
     const importToAdd = `import ${screenName} from '../screens/${screenName}'`
     const routeToAdd = `    ${screenName}: { screen: ${screenName} },`
@@ -53,9 +57,17 @@ module.exports = async function (context) {
       insert: importToAdd
     })
 
+    if (headerType === HEADER_TYPES.Primary) {
+      // insert Sidebar
+      ignite.patchInFile(`${process.cwd()}/src/components/Sidebar/index.js`, {
+        after: `            \\{\\/\\* VSet Key Insert Item After \\*\\/\\}`,
+        insert: '            <MenuItem icon=\'message-outline\' title=\'' + screenName + '\' onPress=\'' + screenName + '\' />'
+      })
+    }
+
     // insert screen route
     ignite.patchInFile(appNavFilePath, {
-      after: headerType === 'Primary' ? 'export default DrawerNavigator\\(\n  \\{' : 'export default StackNavigator\\(\n  \\{',
+      after: headerType === HEADER_TYPES.Primary ? 'export default DrawerNavigator\\(\n  \\{' : 'export default StackNavigator\\(\n  \\{',
       insert: routeToAdd
     })
   } else {
