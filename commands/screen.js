@@ -61,7 +61,7 @@ module.exports = async function (context) {
       // insert Sidebar
       ignite.patchInFile(`${process.cwd()}/src/components/Sidebar/index.js`, {
         after: `            \\{\\/\\* VSet Key Insert Item After \\*\\/\\}`,
-        insert: '            <MenuItem icon=\'message-outline\' title=\'' + screenName + '\' onPress=\'' + screenName + '\' navigation=\'{navigation}\' />'
+        insert: '            <MenuItem icon=\'message-outline\' title=\'' + screenName.toUpperCase() + '\' onPress=\'' + screenName + '\' navigation=\'{navigation}\' />'
       })
     }
 
